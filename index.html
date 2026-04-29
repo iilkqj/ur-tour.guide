@@ -388,7 +388,7 @@
 <div class="ai-chat" id="aiChat">
     <div class="ai-chat-header">🌊 سمر | Summer 🤖</div>
     <div class="ai-chat-body" id="aiChatBody">
-        <div class="ai-chat-message">👋 مرحباً! اختر سؤالاً:</div>
+        <div class="ai-chat-message" id="welcomeChatMsg">👋 مرحباً! اختر سؤالاً:</div>
         <div class="question-grid" id="questionsGrid"></div>
     </div>
 </div>
@@ -399,7 +399,7 @@
 </div>
 
 <script>
-    // ==================== TRANSLATIONS (4 LANGUAGES) ====================
+    // ==================== FULL TRANSLATIONS (4 LANGUAGES) ====================
     const translations = {
         ar: {
             heroTitle: "🌊 سمر | Summer", heroDesc: "مرشدك السياحي الذكي بالذكاء الاصطناعي | يغطي أفضل الوجهات في عُمان", welcome: "✨ مرحباً بك في سمر — اكتشف عُمان بطريقة جديدة ✨",
@@ -443,20 +443,12 @@
         }
     };
 
-    // ==================== 30 QUESTIONS WITH GREEK ====================
+    // ==================== QUESTIONS (4 LANGUAGES) ====================
     const qaData = {
-        ar: [
-            { q: "ما أفضل 5 مطاعم في مسقط؟", a: "🍽️ أفضل مطاعم مسقط:\n1. P.F. Chang's (صيني) - 4.5 ★\n2. China Mood (صيني فاخر) - 4.7 ★\n3. Bait Al Luban (عماني) - 4.6 ★\n4. Turkish House (تركي) - 4.4 ★\n5. The Steakhouse (ستيك) - 4.6 ★" }
-        ],
-        en: [
-            { q: "Best 5 restaurants in Muscat?", a: "🍽️ Best restaurants in Muscat:\n1. P.F. Chang's (Chinese) - 4.5 ★\n2. China Mood (Fine Chinese) - 4.7 ★\n3. Bait Al Luban (Omani) - 4.6 ★\n4. Turkish House (Turkish) - 4.4 ★\n5. The Steakhouse (Steak) - 4.6 ★" }
-        ],
-        zh: [
-            { q: "马斯喀特最好的5家餐厅？", a: "🍽️ 马斯喀特最佳餐厅：\n1. P.F. Chang's (中餐) - 4.5 ★\n2. China Mood (精致中餐) - 4.7 ★\n3. Bait Al Luban (阿曼菜) - 4.6 ★\n4. Turkish House (土耳其菜) - 4.4 ★\n5. The Steakhouse (牛排) - 4.6 ★" }
-        ],
-        el: [
-            { q: "Καλύτερα 5 εστιατόρια στο Μουσκάτ;", a: "🍽️ Καλύτερα εστιατόρια στο Μουσκάτ:\n1. P.F. Chang's (Κινέζικο) - 4.5 ★\n2. China Mood (Κινέζικο) - 4.7 ★\n3. Bait Al Luban (Ομανίτικο) - 4.6 ★\n4. Turkish House (Τούρκικο) - 4.4 ★\n5. The Steakhouse (Μπριζόλα) - 4.6 ★" }
-        ]
+        ar: [{ q: "ما أفضل 5 مطاعم في مسقط؟", a: "🍽️ أفضل مطاعم مسقط:\n1. P.F. Chang's (صيني) - 4.5 ★\n2. China Mood (صيني فاخر) - 4.7 ★\n3. Bait Al Luban (عماني) - 4.6 ★\n4. Turkish House (تركي) - 4.4 ★\n5. The Steakhouse (ستيك) - 4.6 ★" }],
+        en: [{ q: "Best 5 restaurants in Muscat?", a: "🍽️ Best restaurants in Muscat:\n1. P.F. Chang's (Chinese) - 4.5 ★\n2. China Mood (Fine Chinese) - 4.7 ★\n3. Bait Al Luban (Omani) - 4.6 ★\n4. Turkish House (Turkish) - 4.4 ★\n5. The Steakhouse (Steak) - 4.6 ★" }],
+        zh: [{ q: "马斯喀特最好的5家餐厅？", a: "🍽️ 马斯喀特最佳餐厅：\n1. P.F. Chang's (中餐) - 4.5 ★\n2. China Mood (精致中餐) - 4.7 ★\n3. Bait Al Luban (阿曼菜) - 4.6 ★\n4. Turkish House (土耳其菜) - 4.4 ★\n5. The Steakhouse (牛排) - 4.6 ★" }],
+        el: [{ q: "Καλύτερα 5 εστιατόρια στο Μουσκάτ;", a: "🍽️ Καλύτερα εστιατόρια στο Μουσκάτ:\n1. P.F. Chang's (Κινέζικο) - 4.5 ★\n2. China Mood (Κινέζικο) - 4.7 ★\n3. Bait Al Luban (Ομανίτικο) - 4.6 ★\n4. Turkish House (Τούρκικο) - 4.4 ★\n5. The Steakhouse (Μπριζόλα) - 4.6 ★" }]
     };
 
     // ==================== HOTELS DATA ====================
@@ -496,8 +488,8 @@
     function renderQuestions() {
         const grid = document.getElementById('questionsGrid');
         const qa = qaData[currentLang];
-        if (!qa || !qa[0]) return;
-        grid.innerHTML = qa.map((item, idx) => `<button class="q-btn" onclick="sendQuickQuestion(${idx})">❓ ${item.q.substring(0, 30)}${item.q.length > 30 ? '...' : ''}</button>`).join('');
+        if (!qa) return;
+        grid.innerHTML = qa.map((item, idx) => `<button class="q-btn" onclick="sendQuickQuestion(${idx})">❓ ${item.q.substring(0, 35)}${item.q.length > 35 ? '...' : ''}</button>`).join('');
     }
 
     function sendQuickQuestion(index) {
@@ -670,7 +662,10 @@
         
         const chatBody = document.getElementById('aiChatBody');
         if (chatBody) {
-            chatBody.innerHTML = `<div class="ai-chat-message">${lang === 'ar' ? '👋 مرحباً! اختر سؤالاً:' : (lang === 'en' ? '👋 Hello! Choose a question:' : (lang === 'zh' ? '👋 您好！请选择一个问题：' : '👋 Γεια σας! Επιλέξτε μια ερώτηση:'))}</div><div class="question-grid" id="questionsGrid"></div>`;
+            const welcomeMsg = document.getElementById('welcomeChatMsg');
+            if (welcomeMsg) {
+                welcomeMsg.innerHTML = lang === 'ar' ? '👋 مرحباً! اختر سؤالاً:' : (lang === 'en' ? '👋 Hello! Choose a question:' : (lang === 'zh' ? '👋 您好！请选择一个问题：' : '👋 Γεια σας! Επιλέξτε μια ερώτηση:'));
+            }
             renderQuestions();
         }
         
